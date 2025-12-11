@@ -57,12 +57,40 @@ export async function authenticate(
     formData: FormData,
 ) {
     try {
+        const email = formData.get('email') as string
+        const password = formData.get('password') as string
+
+        const user = await prisma.user.findUnique({
+            where: { email },
+        })
+
+        if (!user) {
+            return 'Account does not exist.'
+        }
+
+        if (user.password) {
+            const passwordsMatch = await bcrypt.compare(password, user.password)
+            if (!passwordsMatch) {
+                return 'Incorrect password.'
+            }
+        }
+
         await signIn('credentials', formData, { redirectTo: '/dashboard' })
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
                 case 'CredentialsSignin':
                     return 'Invalid credentials.'
+                case 'CallbackRouteError':
+                    // Valid way to extract the custom error message we threw in authorize
+                    const cause = error.cause;
+                    if (cause?.err?.message === 'UserNotFound') {
+                        return 'Account does not exist.';
+                    }
+                    if (cause?.err?.message === 'InvalidPassword') {
+                        return 'Incorrect password.';
+                    }
+                    return 'Invalid credentials.';
                 default:
                     return 'Something went wrong.'
             }
