@@ -1,0 +1,13 @@
+# AI Agent Instructions
+
+## Styling Rules
+- **Primary Framework**: Use **Tailwind CSS** for all styling updates and new components.
+- **Restrictions**: Do NOT use `styled-jsx` tags (e.g., `<style jsx>`). This causes issues with Server Components and is discouraged in this project.
+- **Fallbacks**: If Tailwind does not provide a sufficient solution (e.g., complex keyframe animations), use standard CSS in `app/globals.css` or CSS Modules.
+- **Design System**: Stick to the standard Tailwind utility classes to ensure visual consistency. Avoid arbitrary values (e.g., `w-[123px]`) unless absolutely necessary.
+
+## Tech Stack
+- Framework: Next.js (App Router)
+- Language: TypeScript
+- Database: SQLite (via Prisma)
+- Auth: NextAuth.js (v5)
