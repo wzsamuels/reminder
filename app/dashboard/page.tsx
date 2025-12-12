@@ -6,6 +6,8 @@ import { format } from "date-fns"
 import { deleteSubscription } from "@/lib/subscription-actions"
 import type { Subscription } from "@/lib/generated/client"
 
+import { CostSummary } from "./cost-summary"
+
 export default async function DashboardPage() {
     const session = await auth()
 
@@ -24,6 +26,8 @@ export default async function DashboardPage() {
                     Add Subscription
                 </Link>
             </div>
+
+            <CostSummary subscriptions={subscriptions} />
 
             {subscriptions.length === 0 ? (
                 <div className="text-center py-10 bg-white rounded-lg shadow">
