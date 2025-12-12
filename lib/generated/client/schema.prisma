@@ -22,21 +22,42 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   subscriptions Subscription[]
+  incomes       Income[]
 }
 
 model Subscription {
-  id           String   @id @default(cuid())
+  id           String      @id @default(cuid())
   userId       String
   name         String
   price        Float
-  currency     String   @default("USD")
+  currency     String      @default("USD")
   frequency    String // "MONTHLY", "YEARLY"
   startDate    DateTime
   nextRenewal  DateTime
-  reminderDays Int      @default(3) // Days before renewal to remind
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  reminderDays Int         @default(3) // Days before renewal to remind
+  sendEmail    Boolean     @default(true)
+  type         ExpenseType @default(SUBSCRIPTION)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum ExpenseType {
+  SUBSCRIPTION
+  BILL
+  YEARLY_EXPENSE
+}
+
+model Income {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Float
+  source    String
+  frequency String   @default("MONTHLY") // "MONTHLY", "YEARLY"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         let emailsSent = 0;
 
         for (const sub of subscriptions) {
-            if (!sub.user?.email) continue;
+            if (!sub.user?.email || !sub.sendEmail) continue;
 
             const renewalDate = new Date(sub.nextRenewal);
             const reminderDate = new Date(renewalDate);
